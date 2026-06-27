@@ -263,8 +263,8 @@ function startGame() {
             const correctY = r * pieceHeight + relativeBoardTop;
             
             // Background positions
-            const bgX = (c * pieceWidth / boardWidth) * 100;
-            const bgY = (r * pieceHeight / boardHeight) * 100;
+            const bgX = c * pieceWidth;
+            const bgY = r * pieceHeight;
             
             // Setup DOM element
             const pieceElement = document.createElement('div');
@@ -272,7 +272,7 @@ function startGame() {
             pieceElement.style.width = `${pieceWidth}px`;
             pieceElement.style.height = `${pieceHeight}px`;
             pieceElement.style.backgroundImage = `url(${state.imageSrc})`;
-            pieceElement.style.backgroundPosition = `${bgX}% ${bgY}%`;
+            pieceElement.style.backgroundPosition = `-${bgX}px -${bgY}px`;
             pieceElement.style.backgroundSize = `${boardWidth}px ${boardHeight}px`;
             
             // Random orientation (Phase 3)
@@ -510,6 +510,8 @@ window.addEventListener('resize', () => {
         
         const c = piece.id % state.gridCols;
         const r = Math.floor(piece.id / state.gridCols);
+        
+        piece.element.style.backgroundPosition = `-${c * pieceWidth}px -${r * pieceHeight}px`;
         
         const correctX = c * pieceWidth + relativeBoardLeft;
         const correctY = r * pieceHeight + relativeBoardTop;
