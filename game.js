@@ -107,6 +107,7 @@ const btnPlayAgain = document.getElementById('btn-play-again');
 const timerDisplay = document.getElementById('timer-display');
 const victoryTimeDisplay = document.getElementById('victory-time');
 const bestTimesList = document.getElementById('best-times-list');
+const victoryBestTimesList = document.getElementById('victory-best-times-list');
 
 // === Initialize Engine ===
 function init() {
@@ -114,6 +115,9 @@ function init() {
     piecesSlider.addEventListener('input', (e) => {
         state.piecesTargetCount = parseInt(e.target.value);
         piecesCountDisplay.textContent = state.piecesTargetCount;
+    });
+    piecesSlider.addEventListener('change', () => {
+        startGame();
     });
 
     btnStart.addEventListener('click', () => {
@@ -494,6 +498,7 @@ function checkVictory() {
         sounds.playVictory();
         
         victoryTimeDisplay.textContent = formatTime(state.timerSeconds);
+        renderVictoryBestTimes();
         
         setTimeout(() => {
             victoryModal.classList.remove('hidden');
@@ -600,6 +605,42 @@ function renderBestTimes() {
             <span class="score-time">${formatTime(score.seconds)}</span>
         `;
         bestTimesList.appendChild(scoreItem);
+    });
+}
+
+function renderVictoryBestTimes() {
+    let scores = [];
+    try {
+        const stored = localStorage.getItem('puzzle_best_times');
+        if (stored) {
+            scores = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    
+    victoryBestTimesList.innerHTML = '';
+    const topScores = scores.slice(0, 5);
+    
+    topScores.forEach((score, index) => {
+        const scoreItem = document.createElement('div');
+        scoreItem.classList.add('score-item');
+        
+        // Highlight current run
+        const isCurrentRun = (score.seconds === state.timerSeconds && 
+                              score.pieces === (state.gridRows * state.gridCols) && 
+                              score.name === getImageFriendlyName(state.imageSrc));
+        if (isCurrentRun) {
+            scoreItem.style.background = 'rgba(139, 92, 246, 0.15)';
+            scoreItem.style.borderColor = 'rgba(139, 92, 246, 0.4)';
+        }
+        
+        scoreItem.innerHTML = `
+            <span class="score-image">#${index + 1} ${score.name}</span>
+            <span class="score-details">${score.pieces} pcs</span>
+            <span class="score-time">${formatTime(score.seconds)}</span>
+        `;
+        victoryBestTimesList.appendChild(scoreItem);
     });
 }
 
