@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🧩 Antigravity Kids Jigsaw Puzzle</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Sidebar Controls -->
+        <aside id="controls-panel">
+            <div class="panel-header">
+                <h1>🧩 Kids Puzzle</h1>
+            </div>
+            
+            <div class="control-group">
+                <label for="pieces-slider">Pieces: <span id="pieces-count-display">24</span></label>
+                <input type="range" id="pieces-slider" min="20" max="200" value="24" step="4">
+            </div>
+
+            <div class="control-group toggles">
+                <button id="toggle-guide" class="btn-secondary active">👻 Guide Image</button>
+                <button id="toggle-rotation" class="btn-secondary active">🔄 Rotate Mode</button>
+            </div>
+
+            <div class="control-group">
+                <h3>Select Picture</h3>
+                <div class="image-selector">
+                    <button class="img-btn active" data-img="dino.png">🦕 Dino</button>
+                    <button class="img-btn" data-img="space.png">🚀 Space</button>
+                    <button class="img-btn" data-img="ocean.png">🐳 Ocean</button>
+                    <label class="custom-file-upload">
+                        <input type="file" id="image-loader" accept="image/*">
+                        📁 Custom Photo
+                    </label>
+                </div>
+            </div>
+
+            <button id="btn-start" class="btn-primary">🎮 Start Puzzle</button>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main id="workspace">
+            <!-- Play Board -->
+            <div id="board-container">
+                <div id="puzzle-board">
+                    <div id="board-ghost"></div>
+                    <div id="board-grid-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Scattered pieces will be dynamically appended here in #pieces-layer -->
+            <div id="pieces-layer"></div>
+
+            <!-- Floating Thumbnail Preview -->
+            <div id="thumbnail-preview" class="show">
+                <span id="close-preview">×</span>
+                <img id="preview-image" src="dino.png" alt="Preview">
+            </div>
+        </main>
+    </div>
+
+    <!-- Victory Overlay -->
+    <div id="victory-modal" class="hidden">
+        <div class="modal-content">
+            <span class="confetti-emoji">🎉</span>
+            <h2>Super Job!</h2>
+            <p>You completed the puzzle!</p>
+            <button id="btn-play-again" class="btn-primary">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
