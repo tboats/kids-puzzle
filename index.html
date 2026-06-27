@@ -45,6 +45,18 @@
             </div>
 
             <button id="btn-start" class="btn-primary">🎮 Start Puzzle</button>
+
+            <!-- Stats & Scores -->
+            <div class="control-group stats-group">
+                <div class="stat-item">⏱️ Time: <span id="timer-display">00:00</span></div>
+            </div>
+
+            <div class="control-group best-times-group">
+                <h3>🏆 Best Times</h3>
+                <div id="best-times-list">
+                    <div class="no-scores">No scores yet!</div>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Workspace -->
@@ -73,7 +85,7 @@
         <div class="modal-content">
             <span class="confetti-emoji">🎉</span>
             <h2>Super Job!</h2>
-            <p>You completed the puzzle!</p>
+            <p>You completed the puzzle in <strong id="victory-time">00:00</strong>!</p>
             <button id="btn-play-again" class="btn-primary">Play Again 🔄</button>
         </div>
     </div>

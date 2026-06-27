@@ -84,6 +84,8 @@ const state = {
     dragStartOffset: { x: 0, y: 0 },
     draggedDistance: 0,
     snapDistance: 30, // in pixels
+    timerInterval: null,
+    timerSeconds: 0,
 };
 
 // === DOM elements ===
@@ -102,6 +104,9 @@ const previewImage = document.getElementById('preview-image');
 const closePreview = document.getElementById('close-preview');
 const victoryModal = document.getElementById('victory-modal');
 const btnPlayAgain = document.getElementById('btn-play-again');
+const timerDisplay = document.getElementById('timer-display');
+const victoryTimeDisplay = document.getElementById('victory-time');
+const bestTimesList = document.getElementById('best-times-list');
 
 // === Initialize Engine ===
 function init() {
@@ -170,6 +175,7 @@ function init() {
     window.addEventListener('pointerup', onPointerUp);
 
     // Initial Load
+    renderBestTimes();
     loadImage(state.imageSrc);
 }
 
@@ -218,6 +224,7 @@ function calculateGrid(targetCount, aspectRatio) {
 // === Start New Puzzle Game ===
 function startGame() {
     state.isCompleted = false;
+    startTimer();
     state.pieces = [];
     piecesLayer.innerHTML = '';
     boardGridOverlay.innerHTML = '';
@@ -480,13 +487,120 @@ function checkVictory() {
     if (allLocked && !state.isCompleted) {
         state.isCompleted = true;
         
+        stopTimer();
+        saveScore();
+        
         // Celebrate!
         sounds.playVictory();
+        
+        victoryTimeDisplay.textContent = formatTime(state.timerSeconds);
         
         setTimeout(() => {
             victoryModal.classList.remove('hidden');
         }, 600);
     }
+}
+
+// === Timer & Best Times Logic ===
+function startTimer() {
+    stopTimer();
+    state.timerSeconds = 0;
+    timerDisplay.textContent = '00:00';
+    
+    state.timerInterval = setInterval(() => {
+        state.timerSeconds++;
+        timerDisplay.textContent = formatTime(state.timerSeconds);
+    }, 1000);
+}
+
+function stopTimer() {
+    if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+    }
+}
+
+function formatTime(totalSeconds) {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function getImageFriendlyName(src) {
+    if (src.startsWith('data:image')) {
+        return 'Custom Photo';
+    }
+    const filename = src.split('/').pop().split('.')[0];
+    if (filename === 'dino') return '🦕 Dino';
+    if (filename === 'space') return '🚀 Space';
+    if (filename === 'ocean') return '🐳 Ocean';
+    if (filename === 'unicorns') return '🦄 Magic';
+    if (filename === 'candy') return '🍬 Candy';
+    if (filename === 'fairy') return '🍄 Fairy';
+    return filename.charAt(0).toUpperCase() + filename.slice(1);
+}
+
+function saveScore() {
+    const name = getImageFriendlyName(state.imageSrc);
+    const count = state.gridRows * state.gridCols;
+    
+    const newScore = {
+        name: name,
+        pieces: count,
+        seconds: state.timerSeconds,
+        date: new Date().toLocaleDateString()
+    };
+    
+    let scores = [];
+    try {
+        const stored = localStorage.getItem('puzzle_best_times');
+        if (stored) {
+            scores = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error loading best times:', e);
+    }
+    
+    scores.push(newScore);
+    scores.sort((a, b) => a.seconds - b.seconds);
+    scores = scores.slice(0, 10);
+    
+    try {
+        localStorage.setItem('puzzle_best_times', JSON.stringify(scores));
+    } catch (e) {
+        console.error('Error saving best times:', e);
+    }
+    
+    renderBestTimes();
+}
+
+function renderBestTimes() {
+    let scores = [];
+    try {
+        const stored = localStorage.getItem('puzzle_best_times');
+        if (stored) {
+            scores = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error('Error parsing scores:', e);
+    }
+    
+    bestTimesList.innerHTML = '';
+    if (scores.length === 0) {
+        bestTimesList.innerHTML = '<div class="no-scores">No scores yet!</div>';
+        return;
+    }
+    
+    scores.forEach(score => {
+        const scoreItem = document.createElement('div');
+        scoreItem.classList.add('score-item');
+        scoreItem.innerHTML = `
+            <span class="score-image">${score.name}</span>
+            <span class="score-details">${score.pieces} pcs</span>
+            <span class="score-time">${formatTime(score.seconds)}</span>
+        `;
+        bestTimesList.appendChild(scoreItem);
+    });
 }
 
 // === Window resizing adaptation ===
