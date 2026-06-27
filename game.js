@@ -178,6 +178,16 @@ function init() {
     window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
 
+    // Prevent double-tap zoom on iOS Safari inside the game workspace
+    let lastTouchEnd = 0;
+    workspace.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
+
     // Initial Load
     renderBestTimes();
     loadImage(state.imageSrc);
