@@ -552,6 +552,10 @@ function getImageFriendlyName(src) {
     if (filename === 'unicorns') return '🦄 Magic';
     if (filename === 'candy') return '🍬 Candy';
     if (filename === 'fairy') return '🍄 Fairy';
+    if (filename === 'zot') return '🐜 Zot';
+    if (filename === 'dragons') return '🐲 Dragons';
+    if (filename === 'tree') return '🌈 Tree';
+    if (filename === 'baby_dinos') return '🦖 Baby Dinos';
     return filename.charAt(0).toUpperCase() + filename.slice(1);
 }
 
