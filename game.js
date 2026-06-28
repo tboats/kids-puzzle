@@ -200,8 +200,8 @@ function init() {
 
     // Prevent pinch-to-zoom globally on iOS Safari (except inside designated zoom zones)
     document.addEventListener('gesturestart', (e) => {
-        if (e.target.closest('#controls-panel') || e.target.closest('#board-zoom-safe-zone')) {
-            return; // Allow pinch to zoom/pan on the sidebar and under-board zoom zones
+        if (e.target.closest('#controls-panel') || e.target.closest('#bottom-zoom-strip')) {
+            return; // Allow pinch to zoom/pan on the sidebar and bottom zoom strip
         }
         e.preventDefault();
     });
