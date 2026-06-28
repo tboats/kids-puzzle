@@ -187,9 +187,10 @@ function init() {
     window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
 
-    // Prevent double-tap zoom on iOS Safari inside the game workspace
+    // Prevent double-tap zoom on iOS Safari inside the game workspace (except for multi-touch gestures)
     let lastTouchStart = 0;
     workspace.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) return; // Do NOT prevent multi-touch (pinch) gestures!
         const now = Date.now();
         if (now - lastTouchStart <= 300) {
             e.preventDefault();

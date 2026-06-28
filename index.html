@@ -57,25 +57,27 @@
                 <div class="stat-item">⏱️ Time: <span id="timer-display">00:00</span></div>
             </div>
 
+            <button id="btn-scores" class="btn-secondary" style="margin-top: 15px; width: 100%;">🏆 View Best Times</button>
+            
             <!-- Zoom & Pan Helper for iPads -->
-            <div id="zoom-safe-zone">
+            <div id="zoom-safe-zone" style="margin-top: 15px;">
                 🔍 Pinch here to Zoom Out
             </div>
-            <button id="btn-scores" class="btn-secondary" style="margin-top: 15px; width: 100%;">🏆 View Best Times</button>
         </aside>
 
         <!-- Main Workspace -->
         <main id="workspace">
             <!-- Play Board -->
-            <div class="board-container-wrapper" id="board-container">
+            <div id="board-container">
                 <div id="puzzle-board">
                     <div id="board-ghost"></div>
                     <div id="board-grid-overlay"></div>
                 </div>
-                <!-- Zoom & Pan Helper right under the board -->
-                <div id="board-zoom-safe-zone">
-                    🔍 Pinch here to Zoom Out
-                </div>
+            </div>
+
+            <!-- Zoom & Pan Helper right under the board -->
+            <div id="board-zoom-safe-zone">
+                🔍 Pinch here to Zoom Out
             </div>
 
             <!-- Scattered pieces will be dynamically appended here in #pieces-layer -->

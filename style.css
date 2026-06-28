@@ -244,10 +244,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     width: 43%; /* Reduced by 5% to fit better on iPads */
     height: 75%; /* Reduced by 5% to fit better on iPads */
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
     z-index: 1;
 }
 
@@ -731,7 +729,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* Board Zoom Safe Zone directly under puzzle */
 #board-zoom-safe-zone {
-    margin-top: 10px;
+    position: absolute;
+    left: 4%;
+    bottom: 4%;
+    width: 43%;
+    box-sizing: border-box;
     padding: 10px 20px;
     border: 2px dashed rgba(139, 92, 246, 0.4);
     border-radius: var(--border-radius);
@@ -745,10 +747,19 @@ input[type="range"]::-webkit-slider-thumb:hover {
     user-select: none;
     -webkit-user-select: none;
     transition: background 0.2s;
-    width: 90%;
-    max-width: 300px;
+    z-index: 10;
 }
 
 #board-zoom-safe-zone:hover {
     background: rgba(139, 92, 246, 0.05);
+}
+
+@media (max-width: 768px) {
+    #board-zoom-safe-zone {
+        position: relative;
+        left: 0;
+        bottom: 0;
+        width: 90%;
+        margin: 15px auto;
+    }
 }
