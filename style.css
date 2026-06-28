@@ -234,7 +234,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
     flex-grow: 1;
     position: relative;
     overflow: hidden;
-    touch-action: none; /* Prevents mobile scroll/zoom during drag */
+    background: rgba(0, 0, 0, 0.04); /* Subtle frame background for safe pinch/zoom */
+    padding: 20px; /* Constricts the active area to leave a clear border all around */
+    box-sizing: border-box;
+    touch-action: manipulation; /* Allow pinch zoom natively on the margin frame */
+}
+
+/* Puzzle Active Area Card */
+#puzzle-active-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.12); /* Glass container backing */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    border: 2px dashed rgba(139, 92, 246, 0.25);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    touch-action: none; /* Block native scroll/zoom gestures inside the active card */
 }
 
 /* Play Board */
