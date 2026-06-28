@@ -197,10 +197,10 @@ function init() {
         lastTouchStart = now;
     }, { passive: false });
 
-    // Prevent pinch-to-zoom globally on iOS Safari (except inside the sidebar controls / zoom zone)
+    // Prevent pinch-to-zoom globally on iOS Safari (except inside designated zoom zones)
     document.addEventListener('gesturestart', (e) => {
-        if (e.target.closest('#controls-panel')) {
-            return; // Allow pinch to zoom/pan on the sidebar
+        if (e.target.closest('#controls-panel') || e.target.closest('#board-zoom-safe-zone')) {
+            return; // Allow pinch to zoom/pan on the sidebar and under-board zoom zones
         }
         e.preventDefault();
     });
@@ -308,13 +308,13 @@ function startGame() {
     const slotWidth = scatterWidth / Sc;
     const slotHeight = scatterHeight / Sr;
     
-    // Reduce the spacing gap between pieces by roughly half
+    // Reduce the spacing gap between pieces by another 50% (75% reduction total from default gap)
     const gapX = slotWidth - pieceWidth;
     const gapY = slotHeight - pieceHeight;
-    const spacingX = pieceWidth + gapX / 2;
-    const spacingY = pieceHeight + gapY / 2;
+    const spacingX = pieceWidth + gapX * 0.25;
+    const spacingY = pieceHeight + gapY * 0.25;
     
-    // Center the tighly packed grid within the scatter zone bounds
+    // Center the tightly packed grid within the scatter zone bounds
     const totalGridWidth = Sc * spacingX;
     const totalGridHeight = Sr * spacingY;
     const offsetX = (scatterWidth - totalGridWidth) / 2;
@@ -329,10 +329,13 @@ function startGame() {
         }
     }
     
+    // Keep only the first totalPieces slots before shuffling to avoid holes inside the grid layout
+    const slotsToUse = slots.slice(0, totalPieces);
+    
     // Shuffle the slots to randomize positions
-    for (let i = slots.length - 1; i > 0; i--) {
+    for (let i = slotsToUse.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [slots[i], slots[j]] = [slots[j], slots[i]];
+        [slotsToUse[i], slotsToUse[j]] = [slotsToUse[j], slotsToUse[i]];
     }
     
     // Create pieces
@@ -365,7 +368,7 @@ function startGame() {
             }
             
             // Pull coordinates from shuffled slot grid
-            const slot = slots[index];
+            const slot = slotsToUse[index];
             const currentX = slot.x;
             const currentY = slot.y;
             

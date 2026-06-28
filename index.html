@@ -61,17 +61,20 @@
             <div id="zoom-safe-zone">
                 🔍 Pinch here to Zoom Out
             </div>
-
             <button id="btn-scores" class="btn-secondary" style="margin-top: 15px; width: 100%;">🏆 View Best Times</button>
         </aside>
 
         <!-- Main Workspace -->
         <main id="workspace">
             <!-- Play Board -->
-            <div id="board-container">
+            <div class="board-container-wrapper" id="board-container">
                 <div id="puzzle-board">
                     <div id="board-ghost"></div>
                     <div id="board-grid-overlay"></div>
+                </div>
+                <!-- Zoom & Pan Helper right under the board -->
+                <div id="board-zoom-safe-zone">
+                    🔍 Pinch here to Zoom Out
                 </div>
             </div>
 
