@@ -99,9 +99,6 @@ const piecesCountDisplay = document.getElementById('pieces-count-display');
 const btnStart = document.getElementById('btn-start');
 const toggleGuide = document.getElementById('toggle-guide');
 const toggleRotation = document.getElementById('toggle-rotation');
-const thumbnailPreview = document.getElementById('thumbnail-preview');
-const previewImage = document.getElementById('preview-image');
-const closePreview = document.getElementById('close-preview');
 const victoryModal = document.getElementById('victory-modal');
 const btnPlayAgain = document.getElementById('btn-play-again');
 const timerDisplay = document.getElementById('timer-display');
@@ -136,18 +133,13 @@ function init() {
         toggleRotation.classList.toggle('active', state.rotationEnabled);
     });
 
-    // Image Buttons selection
-    document.querySelectorAll('.img-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.img-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            const imgPath = e.target.getAttribute('data-img');
-            state.imageSrc = imgPath;
-            previewImage.src = imgPath;
-            
-            loadImage(imgPath);
-        });
+    // Image Select dropdown selection
+    const imageSelect = document.getElementById('image-select');
+    imageSelect.addEventListener('change', (e) => {
+        const imgPath = e.target.value;
+        if (imgPath === 'custom') return;
+        state.imageSrc = imgPath;
+        loadImage(imgPath);
     });
 
     // Custom File Loader
@@ -157,16 +149,21 @@ function init() {
             const reader = new FileReader();
             reader.onload = (event) => {
                 state.imageSrc = event.target.result;
-                previewImage.src = event.target.result;
+                
+                // Add or select "Custom Photo" option in dropdown
+                let customOpt = imageSelect.querySelector('option[value="custom"]');
+                if (!customOpt) {
+                    customOpt = document.createElement('option');
+                    customOpt.value = 'custom';
+                    customOpt.textContent = '📁 Custom Photo';
+                    imageSelect.appendChild(customOpt);
+                }
+                customOpt.selected = true;
+                
                 loadImage(event.target.result);
             };
             reader.readAsDataURL(file);
         }
-    });
-
-    // Close preview button
-    closePreview.addEventListener('click', () => {
-        thumbnailPreview.classList.remove('show');
     });
 
     btnPlayAgain.addEventListener('click', () => {
@@ -207,9 +204,6 @@ function loadImage(src) {
         const aspectRatio = img.naturalWidth / img.naturalHeight;
         puzzleBoard.style.aspectRatio = aspectRatio.toString();
         boardGhost.style.backgroundImage = `url(${src})`;
-        
-        // Show Preview floating card
-        thumbnailPreview.classList.add('show');
         
         startGame();
     };
@@ -279,6 +273,42 @@ function startGame() {
     const relativeBoardLeft = boardRect.left - workspaceRect.left;
     const relativeBoardTop = boardRect.top - workspaceRect.top;
     
+    // Pre-calculate non-overlapping slot grid in the scatter zone
+    const totalPieces = state.gridRows * state.gridCols;
+    const scatterLeftBound = workspaceRect.width * 0.54; // Pushed right to clear smaller board
+    const scatterRightBound = workspaceRect.width - 24;
+    const scatterTopBound = 24;
+    const scatterBottomBound = workspaceRect.height - 24;
+    
+    const scatterWidth = scatterRightBound - scatterLeftBound;
+    const scatterHeight = scatterBottomBound - scatterTopBound;
+    const scatterAspect = scatterWidth / scatterHeight;
+    
+    let Sc = Math.ceil(Math.sqrt(totalPieces * scatterAspect));
+    let Sr = Math.ceil(totalPieces / Sc);
+    while (Sc * Sr < totalPieces) {
+        Sc++;
+    }
+    
+    const slotWidth = scatterWidth / Sc;
+    const slotHeight = scatterHeight / Sr;
+    
+    const slots = [];
+    for (let r = 0; r < Sr; r++) {
+        for (let c = 0; c < Sc; c++) {
+            // Center the piece inside its designated slot box
+            const x = scatterLeftBound + c * slotWidth + (slotWidth - pieceWidth) / 2;
+            const y = scatterTopBound + r * slotHeight + (slotHeight - pieceHeight) / 2;
+            slots.push({ x, y });
+        }
+    }
+    
+    // Shuffle the slots to randomize positions
+    for (let i = slots.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [slots[i], slots[j]] = [slots[j], slots[i]];
+    }
+    
     // Create pieces
     for (let r = 0; r < state.gridRows; r++) {
         for (let c = 0; c < state.gridCols; c++) {
@@ -301,22 +331,17 @@ function startGame() {
             pieceElement.style.backgroundPosition = `-${bgX}px -${bgY}px`;
             pieceElement.style.backgroundSize = `${boardWidth}px ${boardHeight}px`;
             
-            // Random orientation (Phase 3)
+            // Random orientation
             let rotation = 0;
             if (state.rotationEnabled) {
                 const rotationAngles = [0, 90, 180, 270];
                 rotation = rotationAngles[Math.floor(Math.random() * rotationAngles.length)];
             }
             
-            // Scatter position coordinates (Phase 2)
-            // Scatter only on the right half of the workspace to avoid covering the board
-            const scatterLeftBound = workspaceRect.width * 0.52;
-            const scatterRightBound = workspaceRect.width - pieceWidth - 24;
-            const scatterTopBound = 24;
-            const scatterBottomBound = workspaceRect.height - pieceHeight - 24;
-            
-            const currentX = scatterLeftBound + Math.random() * (scatterRightBound - scatterLeftBound);
-            const currentY = scatterTopBound + Math.random() * (scatterBottomBound - scatterTopBound);
+            // Pull coordinates from shuffled slot grid
+            const slot = slots[index];
+            const currentX = slot.x;
+            const currentY = slot.y;
             
             // Store state entry
             const pieceState = {

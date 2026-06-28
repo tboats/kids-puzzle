@@ -29,23 +29,25 @@
             </div>
 
             <div class="control-group">
-                <h3>Select Picture</h3>
-                <div class="image-selector">
-                    <button class="img-btn active" data-img="dino.png">🦕 Dino</button>
-                    <button class="img-btn" data-img="space.png">🚀 Space</button>
-                    <button class="img-btn" data-img="ocean.png">🐳 Ocean</button>
-                    <button class="img-btn" data-img="unicorns.png">🦄 Magic</button>
-                    <button class="img-btn" data-img="candy.png">🍬 Candy</button>
-                    <button class="img-btn" data-img="fairy.png">🍄 Fairy</button>
-                    <button class="img-btn" data-img="zot.png">🐜 Zot</button>
-                    <button class="img-btn" data-img="dragons.png">🐲 Dragons</button>
-                    <button class="img-btn" data-img="tree.png">🌈 Tree</button>
-                    <button class="img-btn" data-img="baby_dinos.png">🦖 Baby Dinos</button>
-                    <label class="custom-file-upload">
-                        <input type="file" id="image-loader" accept="image/*">
-                        📁 Custom Photo
-                    </label>
+                <label for="image-select">Select Picture</label>
+                <div class="select-wrapper">
+                    <select id="image-select">
+                        <option value="dino.png" selected>🦕 Dino</option>
+                        <option value="space.png">🚀 Space</option>
+                        <option value="ocean.png">🐳 Ocean</option>
+                        <option value="unicorns.png">🦄 Magic</option>
+                        <option value="candy.png">🍬 Candy</option>
+                        <option value="fairy.png">🍄 Fairy</option>
+                        <option value="zot.png">🐜 Zot</option>
+                        <option value="dragons.png">🐲 Dragons</option>
+                        <option value="tree.png">🌈 Tree</option>
+                        <option value="baby_dinos.png">🦖 Baby Dinos</option>
+                    </select>
                 </div>
+                <label class="custom-file-upload" style="margin-top: 10px; width: 100%;">
+                    <input type="file" id="image-loader" accept="image/*">
+                    📁 Custom Photo
+                </label>
             </div>
 
             <button id="btn-start" class="btn-primary">🎮 Start Puzzle</button>
@@ -75,12 +77,6 @@
 
             <!-- Scattered pieces will be dynamically appended here in #pieces-layer -->
             <div id="pieces-layer"></div>
-
-            <!-- Floating Thumbnail Preview -->
-            <div id="thumbnail-preview" class="show">
-                <span id="close-preview">×</span>
-                <img id="preview-image" src="dino.png" alt="Preview">
-            </div>
         </main>
     </div>
 
