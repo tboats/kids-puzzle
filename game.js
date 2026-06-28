@@ -179,14 +179,19 @@ function init() {
     window.addEventListener('pointerup', onPointerUp);
 
     // Prevent double-tap zoom on iOS Safari inside the game workspace
-    let lastTouchEnd = 0;
-    workspace.addEventListener('touchend', (e) => {
+    let lastTouchStart = 0;
+    workspace.addEventListener('touchstart', (e) => {
         const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
+        if (now - lastTouchStart <= 300) {
             e.preventDefault();
         }
-        lastTouchEnd = now;
+        lastTouchStart = now;
     }, { passive: false });
+
+    // Prevent pinch-to-zoom globally on iOS Safari
+    document.addEventListener('gesturestart', (e) => {
+        e.preventDefault();
+    });
 
     // Initial Load
     renderBestTimes();

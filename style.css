@@ -318,6 +318,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
     user-select: none;
     -webkit-user-select: none;
     transform-origin: center center;
+    touch-action: none;
 }
 
 .puzzle-piece:active {
