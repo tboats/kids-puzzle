@@ -308,12 +308,23 @@ function startGame() {
     const slotWidth = scatterWidth / Sc;
     const slotHeight = scatterHeight / Sr;
     
+    // Reduce the spacing gap between pieces by roughly half
+    const gapX = slotWidth - pieceWidth;
+    const gapY = slotHeight - pieceHeight;
+    const spacingX = pieceWidth + gapX / 2;
+    const spacingY = pieceHeight + gapY / 2;
+    
+    // Center the tighly packed grid within the scatter zone bounds
+    const totalGridWidth = Sc * spacingX;
+    const totalGridHeight = Sr * spacingY;
+    const offsetX = (scatterWidth - totalGridWidth) / 2;
+    const offsetY = (scatterHeight - totalGridHeight) / 2;
+    
     const slots = [];
     for (let r = 0; r < Sr; r++) {
         for (let c = 0; c < Sc; c++) {
-            // Center the piece inside its designated slot box
-            const x = scatterLeftBound + c * slotWidth + (slotWidth - pieceWidth) / 2;
-            const y = scatterTopBound + r * slotHeight + (slotHeight - pieceHeight) / 2;
+            const x = scatterLeftBound + offsetX + c * spacingX + (spacingX - pieceWidth) / 2;
+            const y = scatterTopBound + offsetY + r * spacingY + (spacingY - pieceHeight) / 2;
             slots.push({ x, y });
         }
     }
