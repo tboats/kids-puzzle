@@ -23,11 +23,6 @@
                 <input type="range" id="pieces-slider" min="20" max="200" value="24" step="4">
             </div>
 
-            <div class="control-group toggles">
-                <button id="toggle-guide" class="btn-secondary active">👻 Guide Image</button>
-                <button id="toggle-rotation" class="btn-secondary active">🔄 Rotate Mode</button>
-            </div>
-
             <div class="control-group">
                 <label for="image-select">Select Picture</label>
                 <div class="select-wrapper">
@@ -44,25 +39,30 @@
                         <option value="baby_dinos.png">🦖 Baby Dinos</option>
                     </select>
                 </div>
-                <label class="custom-file-upload" style="margin-top: 10px; width: 100%;">
-                    <input type="file" id="image-loader" accept="image/*">
-                    📁 Custom Photo
-                </label>
+                
+                <div class="custom-photo-row">
+                    <label class="custom-file-upload">
+                        <input type="file" id="image-loader" accept="image/*">
+                        📁 Custom Photo
+                    </label>
+                    <button id="toggle-guide" class="btn-icon active" title="Toggle Guide Image">👻</button>
+                    <button id="toggle-rotation" class="btn-icon active" title="Toggle Rotate Mode">🔄</button>
+                </div>
             </div>
 
             <button id="btn-start" class="btn-primary">🎮 Start Puzzle</button>
 
-            <!-- Stats & Scores -->
+            <!-- Stats -->
             <div class="control-group stats-group">
                 <div class="stat-item">⏱️ Time: <span id="timer-display">00:00</span></div>
             </div>
 
-            <div class="control-group best-times-group">
-                <h3>🏆 Best Times</h3>
-                <div id="best-times-list">
-                    <div class="no-scores">No scores yet!</div>
-                </div>
+            <!-- Zoom & Pan Helper for iPads -->
+            <div id="zoom-safe-zone">
+                🔍 Pinch here to Zoom Out
             </div>
+
+            <button id="btn-scores" class="btn-secondary" style="margin-top: 15px; width: 100%;">🏆 View Best Times</button>
         </aside>
 
         <!-- Main Workspace -->
@@ -94,6 +94,17 @@
             </div>
             
             <button id="btn-play-again" class="btn-primary">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <!-- Best Times Modal -->
+    <div id="scores-modal" class="hidden">
+        <div class="modal-content">
+            <span id="close-scores" class="close-btn">×</span>
+            <h2>🏆 Best Times</h2>
+            <div id="best-times-list-modal">
+                <div class="no-scores">No scores yet!</div>
+            </div>
         </div>
     </div>
 

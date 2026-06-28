@@ -103,7 +103,10 @@ const victoryModal = document.getElementById('victory-modal');
 const btnPlayAgain = document.getElementById('btn-play-again');
 const timerDisplay = document.getElementById('timer-display');
 const victoryTimeDisplay = document.getElementById('victory-time');
-const bestTimesList = document.getElementById('best-times-list');
+const bestTimesListModal = document.getElementById('best-times-list-modal');
+const scoresModal = document.getElementById('scores-modal');
+const closeScores = document.getElementById('close-scores');
+const btnScores = document.getElementById('btn-scores');
 const victoryBestTimesList = document.getElementById('victory-best-times-list');
 
 // === Initialize Engine ===
@@ -166,6 +169,15 @@ function init() {
         }
     });
 
+    btnScores.addEventListener('click', () => {
+        renderBestTimesModal();
+        scoresModal.classList.remove('hidden');
+    });
+
+    closeScores.addEventListener('click', () => {
+        scoresModal.classList.add('hidden');
+    });
+
     btnPlayAgain.addEventListener('click', () => {
         victoryModal.classList.add('hidden');
         startGame();
@@ -185,13 +197,16 @@ function init() {
         lastTouchStart = now;
     }, { passive: false });
 
-    // Prevent pinch-to-zoom globally on iOS Safari
+    // Prevent pinch-to-zoom globally on iOS Safari (except inside the sidebar controls / zoom zone)
     document.addEventListener('gesturestart', (e) => {
+        if (e.target.closest('#controls-panel')) {
+            return; // Allow pinch to zoom/pan on the sidebar
+        }
         e.preventDefault();
     });
 
     // Initial Load
-    renderBestTimes();
+    renderBestTimesModal();
     loadImage(state.imageSrc);
 }
 
@@ -620,10 +635,10 @@ function saveScore() {
         console.error('Error saving best times:', e);
     }
     
-    renderBestTimes();
+    renderBestTimesModal();
 }
 
-function renderBestTimes() {
+function renderBestTimesModal() {
     let scores = [];
     try {
         const stored = localStorage.getItem('puzzle_best_times');
@@ -634,9 +649,9 @@ function renderBestTimes() {
         console.error('Error parsing scores:', e);
     }
     
-    bestTimesList.innerHTML = '';
+    bestTimesListModal.innerHTML = '';
     if (scores.length === 0) {
-        bestTimesList.innerHTML = '<div class="no-scores">No scores yet!</div>';
+        bestTimesListModal.innerHTML = '<div class="no-scores">No scores yet!</div>';
         return;
     }
     
@@ -648,7 +663,7 @@ function renderBestTimes() {
             <span class="score-details">${score.pieces} pcs</span>
             <span class="score-time">${formatTime(score.seconds)}</span>
         `;
-        bestTimesList.appendChild(scoreItem);
+        bestTimesListModal.appendChild(scoreItem);
     });
 }
 

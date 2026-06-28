@@ -403,7 +403,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 /* Victory Modal */
-#victory-modal {
+#victory-modal, #scores-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -419,12 +419,13 @@ input[type="range"]::-webkit-slider-thumb:hover {
     transition: opacity 0.3s ease;
 }
 
-#victory-modal.hidden {
+#victory-modal.hidden, #scores-modal.hidden {
     display: none;
     opacity: 0;
 }
 
 .modal-content {
+    position: relative;
     background: white;
     padding: 40px 60px;
     border-radius: 30px;
@@ -630,4 +631,98 @@ input[type="range"]::-webkit-slider-thumb:hover {
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+/* Custom Photo & Mini Icon Buttons Row */
+.custom-photo-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.custom-photo-row .custom-file-upload {
+    flex-grow: 1;
+    margin-top: 0 !important;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+.btn-icon {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: var(--border-radius);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.btn-icon.active {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* iPad Zoom Safe Zone */
+#zoom-safe-zone {
+    margin-top: 15px;
+    padding: 12px;
+    border: 2px dashed rgba(139, 92, 246, 0.4);
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+    touch-action: auto !important; /* Force browser to allow panning/zooming gestures on this box */
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background 0.2s;
+}
+
+#zoom-safe-zone:hover {
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* Modal Close Button */
+.modal-content .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: 800;
+    cursor: pointer;
+    color: #94a3b8;
+    line-height: 1;
+    transition: color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.modal-content .close-btn:hover {
+    color: var(--text-dark);
+}
+
+#best-times-list-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
 }
